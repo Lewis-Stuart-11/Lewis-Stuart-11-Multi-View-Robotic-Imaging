@@ -1,0 +1,27 @@
+[
+	{
+		"name": "both_arms",
+		"move_group": "both_arms_manipulator",
+		"robots":[
+			{
+				"end_effector_transform": "arm1_camera_controller",
+				"base_transform": "arm1_base_link",
+				"reach": 0.80, 
+				"camera_transform": "arm1_camera_predicted_colour_lens",
+				"camera_properties_file_path": "camera_properties/cameras_robot1_1080px.json",
+				"camera_serial_no": "827112071788",
+				"camera_fps": 30
+			},
+			{
+				"end_effector_transform": "arm2_camera_controller",
+				"base_transform": "arm2_base_link",
+				"reach": 0.80,
+				"camera_transform": "arm2_camera_predicted_colour_lens",
+				"camera_properties_file_path": "camera_properties/cameras_robot2_1080px.json",
+				"camera_serial_no": "215222073199",
+				"camera_fps": 6
+			}
+		]
+
+	}
+]

@@ -1,0 +1,37 @@
+log_dir = "logs"
+
+experiment_name = config_duel_arm1_2
+save_fig = false
+    
+main_obj_position = [0.0, 0.0, 0.1]
+main_obj_size = [0.35, 0.35, 0.35]
+
+auto_add_obj_stand = true
+
+aabb = [-0.4, 1.0, -1.0, 0.0, 0.4, 1.0]
+
+rings = 32
+sectors = 28
+capture_radius = 0.6
+
+num_move_attempts = 2
+
+transform_scale = 10
+
+test_incrementation = 8
+
+img_pair_range=3
+
+obj_stand_thickness = 0.3
+
+robot_settings_path = "robot_setups/duel_parallel.json"
+
+adjust_transforms = true
+
+camera_handler_type = realsense
+
+use_turntable = false
+
+use_fake_transforms = true
+
+continue_experiment = true

@@ -1,0 +1,16 @@
+[
+	{
+		"name": "main",
+		"move_group": "arm2_manipulator",
+		"robots":[
+			{
+				"end_effector_transform": "arm2_camera_controller",
+				"base_transform": "arm2_base_link",
+				"camera_transform": "arm2_camera_predicted_colour_lens",
+				"camera_topic": "arm2_camera",
+				"camera_properties_file_path": "camera_properties/cameras_robot2_1080px.json",
+				"camera_serial_no": "215222073199"
+			}
+		]
+	}
+]

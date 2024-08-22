@@ -1,0 +1,7 @@
+roslibpy
+opencv-python
+pillow
+ConfigArgParse
+numpy
+urdf-parser-py
+matplotlib

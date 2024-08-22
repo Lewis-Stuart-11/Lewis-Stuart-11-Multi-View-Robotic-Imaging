@@ -1,0 +1,29 @@
+log_dir = "logs"
+
+experiment_name = config_arm2
+save_fig = false
+    
+main_obj_position = [0.0, 0.0, 0.1]
+main_obj_size = [0.35, 0.35, 0.5]
+
+auto_add_obj_stand = true
+
+aabb = [-1.0, 1.0, -1.0, 1.0, -0.5, 1.0]
+
+rings = 22
+sectors = 22
+capture_radius = 0.75
+
+num_move_attempts = 2
+
+obj_stand_thickness = 0.3
+
+robot_settings_path = "robot_setups/single_arm2.json"
+
+visualise = true
+
+discard_img_capturing = true
+
+discard_robot_movement = true
+
+continue_experiment = true

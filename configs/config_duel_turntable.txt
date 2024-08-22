@@ -1,0 +1,30 @@
+log_dir = "logs"
+
+experiment_name = config_duel_turntable
+save_fig = false
+    
+main_obj_position = [0.0, 0.0, 0.1]
+main_obj_size = [0.35, 0.35, 0.4]
+
+auto_add_obj_stand = true
+
+aabb = [-1.0, 1.0, -1.0, 1.0, -0.1, 1.0]
+
+rings = 15
+sectors = 15
+capture_radius = 0.65
+
+num_move_attempts = 2
+
+obj_stand_thickness = 0.3
+
+robot_settings_path = "robot_setups/duel_parallel.json"
+
+continue_experiment = true
+
+camera_handler_type = "realsense"
+
+use_turntable = true
+
+segment_method = "white_removal"
+
