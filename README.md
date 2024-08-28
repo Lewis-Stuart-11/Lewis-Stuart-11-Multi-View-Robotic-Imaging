@@ -6,7 +6,7 @@ Our pipeline supports any robot that has a MoveIt package and valid URDF joints/
 
 To run this framework, enter the following command: **python view_capture.py --config path\\to\\config\\file**
 
-![Showcase of duel robot setup](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdm5paXh0Z3lwb29pMGtyOWE1c2hzanFjZzV2emU4cGttazNleWEwdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FE4JcF5CeUyELIEfiE/giphy-downsized-large.gif)
+![Showcase of duel robot setup](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZG9idWU4M2drcGZjZWF3d2FjZGRlMmdnYTBhZ2c2ZDFydzVqNXk2ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2FMP6xCDFya9LhVXbs/giphy.gif)
 
 # How to Install
 
