@@ -1,4 +1,4 @@
-Capturing multi-view image datasets are relatively simple, all you need is a camera to capture videos/images and a structure from motion (SfM) framework to extract the camera poses for each image. However, capturing concentric views, which is ideal for 3D reconstruction models, can be troublesome with a camera. Furthermore, utilising SfM software produces camera poses with arbritrary values, which may not be ideal if the scene needs to be reconstructed in known units.
+Capturing multi-view image datasets are relatively simple, all you need is a camera to capture videos/images and a structure from motion (SfM) framework to extract the camera poses for each image. However, capturing concentric views, which is ideal for 3D reconstruction models, can be troublesome with a camera. Furthermore, utilising SfM software produces camera poses with arbitrary values, which may not be ideal if the scene needs to be reconstructed in known units.
 
 This repo offers a set of scripts that can utilise any ROS supported robot, with an associated MoveIt package and attached physical camera, to capture concentric views around an object. At the end of image capturing, a generated transform/COLMAP files ready for use in 3D reconstruction software. We experimented utilising our dataset on Neural Radiance Fields (NeRF) and 3D Gaussian Splatting (3DGS) models, which can be installed using [NeRFStudio](https://docs.nerf.studio/).
 
@@ -34,11 +34,11 @@ For details about how we implemented MoveIt for our UR5 setup, please visit *htt
 
 Firstly, the user must provide information about the current scene to be captured. This includes the size of the object being captured, the position of that object in relation to the origin of the robot WCS, and the size of the radius to set the camera poses from the centre of the object. Using this information, a set of camera poses are generated using a simple sphere generation algorithm that are pointed towards the centre of the scene.  The sphere algorithm uses rings (horizontal 'cuts') and sectors (vertical 'cuts') to define a series of points along the surface of the sphere, the distance from each point to the centre is set as the capture radius parameter. These generated points are the camera poses that will be recorded in the transform file. If a turntable is not used, then these camera poses are added as the camera poses that the robots will traverse to. 
 
-If a turntable is used, then the midpoint between each of the robots is calculated, which is the area of the scene that has the most overlap between all robots. Each camera pose is then rotated to a position on a fixed plane between the turntable and the midpoint. The angle between the new rotated pose and original pose is the angle that will be set as to the rotation of the turntable. Essentialy, rather than positioning the robots around the object in the scene, the turntable rotates the objects relative to the robots.
+If a turntable is used, then the midpoint between each of the robots is calculated, which is the area of the scene that has the most overlap between all robots. Each camera pose is then rotated to a position on a fixed plane between the turntable and the midpoint. The angle between the new rotated pose and original pose is the angle that will be set as to the rotation of the turntable. Essentially, rather than positioning the robots around the object in the scene, the turntable rotates the objects relative to the robots.
 
-Each pose is added to a group based on the 'sector' that that pose was part of (in the sphere generation), and the pipeline iterates through each group during traversal. Each point in the group is then assigned to a robot. To calculate this, each robot is compared to that point based on the reach of the robot and the distance of the robot base to that point. The robot with best reachability is assigned to that point, and that point is then added to that robot's pose queue. Next, each point in each robot queue is iterated through in parallel, allowing multiple robots to traverse to points in parallel. If these points cannot be reached in parallel, then each robot will traverse to that point serially. Once a robot has reached a new point, then an image is captured from the camera attached to that robot, and the camera pose is recorded for that image. This software can also captured depth maps (if the cameras support this) and segment out the centre object (if the setup supports this). 
+Each pose is added to a group based on the 'sector' that that pose was part of (in the sphere generation), and the pipeline iterates through each group during traversal. Each point in the group is then assigned to a robot. To calculate this, each robot is compared to that point based on the reach of the robot and the distance of the robot base to that point. The robot with best reachability is assigned to that point, and that point is then added to that robot's pose queue. Next, each point in each robot queue is iterated through in parallel, allowing multiple robots to traverse to points in parallel. If these points cannot be reached in parallel, then each robot will traverse to that point serially. Once a robot has reached a new point, then an image is captured from the camera attached to that robot, and the camera pose is recorded for that image. This software can also capture depth maps (if the cameras support this) and segment out the centre object (if the setup supports this). 
 
-Once all points have been traversed, then the camera poses are then optimised using COLMAP. Firstly, a set of image pairs are calculated. Essentially, each image position is traversed, and if an image is adjacent to this image by x amount (the 'img\_pair\_range' argument), then these images are added as an image pair. Next, features are extracted from each of the image using COLMAP. These features are then matched based on the image pairs (features from images are only matched with features from other images that are an image pair). Then, each matched feature is triangulated and projected into 3D to produce a point cloud based on the recorded camera poses. Finally, bundle adjustment is then performed to refine each camera pose to become more accurate based on the pointcloud. This process of point triangulation and bundle adjustment is then repeated several times, each using the refined camera poses for triangulation. Finally, once the new camera poses have been calculated, the new camera poses are then scaled back to the original distances from the object centre and repositioned around the origin.
+Once all points have been traversed, then the camera poses are then optimised using COLMAP. Firstly, a set of image pairs are calculated. Essentially, each image position is traversed, and if an image is adjacent to this image by x amount (the 'img\_pair\_range' argument), then these images are added as an image pair. Next, features are extracted from each of the image using COLMAP. These features are then matched based on the image pairs (features from images are only matched with features from other images that are an image pair). Then, each matched feature is triangulated and projected into 3D to produce a point cloud based on the recorded camera poses. Finally, bundle adjustment is then performed to refine each camera pose to become more accurate based on the point cloud. This process of point triangulation and bundle adjustment is then repeated several times, each using the refined camera poses for triangulation. Finally, once the new camera poses have been calculated, the new camera poses are then scaled back to the original distances from the object centre and repositioned around the origin.
 
 Each of the images and camera poses are saved into a new directory in the log path. This includes: images, transforms and COLMAP files. Different transforms are saved for the different types of images (e.g. RGB, RGB-D, Segmented RGB, etc..) and the original camera pose transforms are also saved. 
 
@@ -50,7 +50,7 @@ Our framework is extremely customisable, offering many different arguments that 
 
 ## Experiment Settings
 
-These arguments are used for controlling where data is stored, loaded and visualsied
+These arguments are used for controlling where data is stored, loaded and visualised
 
 | Argument             | Default Value  | Description |
 | :---                 |    :----:      |          ---: |
@@ -69,7 +69,7 @@ These arguments are used for controlling how the robots are controlled, which ro
 | robot\_settings\_path |    -          | Path to JSON file containing all information required for running robots and managing cameras (**required**) |
 | robot\_handler\_type |      moveit          | Class for controlling the robots (currently only supports MoveIt) |
 | parallelise\_robots |    True         | Set to allow for parallel robot path planning i(if multiple robots are supported). Otherwise, serial path planning will be used  |
-| avoid\_self\_capture\_paths | False | Sometimes, the robot will move to a position where its own joints are blocking the camera. If set to True, paths will be prioritsed that avoid this. |
+| avoid\_self\_capture\_paths | False | Sometimes, the robot will move to a position where its own joints are blocking the camera. If set to True, paths will be prioritised that avoid this. |
 | priorised\_robot |           -         | If multiple robots are supported, then prioritise one robot over the other when assigning new positions |
 | planning\_time |  2.0  | The maximum number of seconds to take for each robot path planning attempt before failing |
 | num\_planning\_attempts |  3  | The number of attempts to move to specific position before failing and beginning next position movement attempt |
@@ -146,7 +146,7 @@ These arguments are used for generating views around the object in the scene
 
 | Argument             | Default Value  | Description |
 | :---                 |    :----:      |          ---: |
-| capture\_radius  | - | The distance from the center of the main object to all of the generated camera positions (**Required**) |
+| capture\_radius  | - | The distance from the centre of the main object to all of the generated camera positions (**Required**) |
 | rings | 7 | The number of rings used for generating the camera positions using a basic sphere algorithm |
 | sectors | 14 | The number of sectors used for generating the camera positions using a basic sphere algorithm |
 | aabb | [] | An axis-aligned bounding box, with (x,y,z) values between 0 and 1, that is used to filter points that are not positioned inside of this volume during view generation |
@@ -169,10 +169,10 @@ These arguments are used for refining the camera poses after image capturing usi
 
 | Argument             | Default Value  | Description |
 | :---                 |    :----:      |          ---: |
-| sfm\_package | COLMAP | The SfM package to use for adjusting the transforms (currently onyl supports COLMAP) |
+| sfm\_package | COLMAP | The SfM package to use for adjusting the transforms (currently only supports COLMAP) |
 | refine\_transforms | True | If set, sfm techniques will be used to optimise the given transforms | 
 | img\_pair\_path | - | The path to an img pair txt file that can be used in feature matching (only set if this file has been calculated before) |
-| use\_relative\_img\_pairs | True | Set to match features of images relative to eachother |
+| use\_relative\_img\_pairs | True | Set to match features of images relative to each other |
 | img\_pair\_range | 3 | The range of adjacent images to include for each image in relative image pair generation |
 | undistort\_imgs | True | Undistorts the images after camera pose adjustment |
 | use\_mask\_in\_sfm | True | Only extract features after applying the mask (recommended for turntable experiments with background) |
@@ -279,7 +279,7 @@ Configuring these different components are explained below.
 ## ROS, MoveIt and URDF
 Firstly, ROS must be correctly installed such that the robots can be correctly managed. For more information, please visit: *https://www.ros.org/*. This framework was only tested on ROS Noetic.
 
-Next, a valid MoveIt package must be generated which can perform valid path planning for each robot. The MoveIt package must have a valid kinematic chain from the base of each robot, to the end effector (camera lens). This framework supports parallel path planning if this is correctly configured in the conguration file. For more information, please visit: *http://moveit.ros.org/*.
+Next, a valid MoveIt package must be generated which can perform valid path planning for each robot. The MoveIt package must have a valid kinematic chain from the base of each robot to the end effector (camera lens). This framework supports parallel path planning if this is correctly configured in the conguration file. For more information, please visit: *http://moveit.ros.org/*.
 
 To ensure that the robot is correctly mapped in MoveIt, a valid URDF file must be generated that documents each joint in the robot setup, including the base of each robot and camera lens. This information is important as it is how MoveIt can reposition each robot so that the camera is pointed towards the main scene. Furthermore, this is how the camera transforms are correctly calculated for each robot.
 
@@ -288,7 +288,7 @@ It is also crucial that the mapped robot joints are measured correctly. If the t
 The robot config files that we used for creating this pipeline can be installed from [this repo](https://github.com/Lewis-Stuart-11/Dual-UR5-Config)
 
 ## Robot Settings File
-In order to run this pipeline on a ROS robot setup, a few parameters must be defined in a JSON file, that defines the key values required to facilitate valid image capturing. These provide information to the piepline about what robots are part of the scene, what cameras are avaliable and how these robots can move to new positions in the scene to facilitate image capturing.
+To run this pipeline on a ROS robot setup, a few parameters must be defined in a JSON file, that defines the key values required to facilitate valid image capturing. These provide information to the pipeline about what robots are part of the scene, what cameras are available and how these robots can move to new positions in the scene to facilitate image capturing.
 
 Robot management is split into two classes:
 * Controllers- the move group that controls a set of robots. If configured correctly in Moveit, these robots can be executed in parallel
@@ -300,7 +300,7 @@ The JSON file accepts a list of controllers, with each controller having a list 
 * robots: the list of robots 
 
 The parameters for a robot are as follows:
-* end\_effector\_transform: the name of the end-effector joint on the robot (this is typicall the optical centre of the camera and will point towards the centre of the scene)
+* end\_effector\_transform: the name of the end-effector joint on the robot (this is typically the optical centre of the camera and will point towards the centre of the scene)
 * base\_transform: base of the robot (root joint)
 * camera_transform: the name of the camera joint that will be used for calculating the camera pose transform.
 * reach: the maximum reach of the robot in the same units as positions in the URDF file. This is used for calculating what points should be assigned to each robot
@@ -341,9 +341,9 @@ For context, here is a JSON file that we utilised for capturing of our robot set
 
 # Adding your own Camera
 
-Currently, this pipeline supports ROS, GPhoto and Realsense cameras. Each of these are configured using individual classes inside of the camera_handler file. To add your own, create a new class that derives from the CameraHandler abstract class and add your own the methods for capturing new images. A DepthCameraHandler abstract class is also avaliable for cameras that support depth capturing. Each new class should be registered to the factory function
+Currently, this pipeline supports ROS, GPhoto and Realsense cameras. Each of these are configured using individual classes inside of the camera_handler file. To add your own, create a new class that derives from the CameraHandler abstract class and add your own the methods for capturing new images. A DepthCameraHandler abstract class is also available for cameras that support depth capturing. Each new class should be registered to the factory function
 
-For the captured camera poses to be correctly refined using bundle adjustment, valid intrinsic camera paramters must be provided for each camera. These parameters are stored in a json file that defines each attribute of the camera. These paramters can be determined using either COLMAP or OpenCV's camera calibration. 
+For the captured camera poses to be correctly refined using bundle adjustment, valid intrinsic camera parameters must be provided for each camera. These parameters are stored in a json file that defines each attribute of the camera. These parameters can be determined using either COLMAP or OpenCV's camera calibration. 
 
 It is important to ensure that these intrinsic parameters are accurate, otherwise the bundle adjustment process will not converge correctly.
 
